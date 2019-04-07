@@ -34,18 +34,23 @@ namespace Sekiro_Save_Manager.Forms
 
             _saveBackupIndex.Load(BackupIndexName);
 
-            lvBackups.Items.Clear();
-
-            foreach (var backup in _saveBackupIndex)
-            {
-                DisplayBackup(backup);
-            }
+            DisplayBackups();
 
             var count = _saveBackupIndex.Count();
 
             if (count > 0)
             {
                 Log($"Loaded {count} backup(s) from {BackupIndexName}");
+            }
+        }
+
+        private void DisplayBackups()
+        {
+            lvBackups.Items.Clear();
+
+            foreach (var backup in _saveBackupIndex)
+            {
+                DisplayBackup(backup);
             }
         }
 
@@ -108,6 +113,7 @@ namespace Sekiro_Save_Manager.Forms
             BackupTimer.Interval = (int) (numBackupInterval.Value * 60000);
             chkAutoBackup.Checked = Settings.Default.AutomaticBackup;
             txtAutoBackupLocation.Text = Settings.Default.AutomaticBackupDirectory;
+            txtBackupDirectory.Text = Settings.Default.BackupDirectory;
             chkHideRestoreWarning.Checked = Settings.Default.HideRestoreWarning;
             chkTrayMinimize.Checked = Settings.Default.TrayMinimize;
 
@@ -137,6 +143,7 @@ namespace Sekiro_Save_Manager.Forms
             Settings.Default.AutomaticBackupDirectory = txtAutoBackupLocation.Text;
             Settings.Default.HideRestoreWarning = chkHideRestoreWarning.Checked;
             Settings.Default.TrayMinimize = chkTrayMinimize.Checked;
+            Settings.Default.BackupDirectory = txtBackupDirectory.Text;
             Settings.Default.Save();
         }
 
@@ -199,25 +206,22 @@ namespace Sekiro_Save_Manager.Forms
         {
             btnRestore.Enabled = lvBackups.SelectedItems.Count > 0;
             btnEdit.Enabled = lvBackups.SelectedItems.Count > 0;
+            btnDelete.Enabled = lvBackups.SelectedItems.Count > 0;
         }
 
         private void btnBackup_Click(object sender, EventArgs e)
         {
-            using (var sfd = new SaveFileDialog
+            using (var editd = new EditDialog(""))
             {
-                Title = "Select a location to save the backup",
-                DefaultExt = Sekiro.SaveFileExtension,
-                Filter = $"Sekiro Save File ({Sekiro.SaveFileExtension})|*{Sekiro.SaveFileExtension}"
-            })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
+                if (editd.ShowDialog() == DialogResult.OK)
                 {
-                    BackupSave(Path.Combine(GetCurrentProfilePath(), Sekiro.SaveFileName), sfd.FileName);
+                    BackupSave(editd.Value, Path.Combine(GetCurrentProfilePath(), Sekiro.SaveFileName),
+                        Path.Combine(Settings.Default.BackupDirectory, Guid.NewGuid().ToString() + Sekiro.SaveFileExtension));
                 }
             }
         }
 
-        private void BackupSave(string source, string destination)
+        private void BackupSave(string comment, string source, string destination)
         {
             try
             {
@@ -231,8 +235,10 @@ namespace Sekiro_Save_Manager.Forms
             }
 
             var saveBackup = new SaveBackup(destination, source, "", DateTime.Now);
+            saveBackup.Comment = comment;
             _saveBackupIndex.Add(saveBackup);
             _saveBackupIndex.Save(BackupIndexName);
+            DisplayBackups();
         }
 
         private void RestoreBackup(string source, string destination)
@@ -286,7 +292,7 @@ namespace Sekiro_Save_Manager.Forms
             var gameSavePath = Path.Combine(GetCurrentProfilePath(), Sekiro.SaveFileName);
             var path = Path.Combine(Settings.Default.AutomaticBackupDirectory, $"Backup {now:yyyy-dd-M--HH-mm-ss}");
 
-            BackupSave(gameSavePath, path);
+            BackupSave($"Auto {now:yyyy-dd-M--HH-mm-ss}", gameSavePath, path);
         }
 
         private void btnRestore_Click(object sender, EventArgs e)
@@ -346,6 +352,38 @@ namespace Sekiro_Save_Manager.Forms
                     selectedBackup.Comment = dialog.Value;
                     _saveBackupIndex.Save(BackupIndexName);
                     selectedItem.SubItems[colComment.Index].Text = dialog.Value;
+                }
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("This will delete the backup save. Are you sure?",
+                    "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+
+            if (result == DialogResult.Cancel)
+            {
+                return;
+            }
+            var selectedItem = lvBackups.SelectedItems[0];
+            var selectedBackup = (SaveBackup)selectedItem.Tag;
+            _saveBackupIndex.Remove(selectedBackup);
+            File.Delete(selectedBackup.BackupLocation);
+            _saveBackupIndex.Save(BackupIndexName);
+            DisplayBackups();
+        }
+
+        private void btnBackupLocation_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog
+            {
+                Description = "Select a backup directory"
+            })
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    txtBackupDirectory.Text = dialog.SelectedPath;
+                    SaveSettings();
                 }
             }
         }

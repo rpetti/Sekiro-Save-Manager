@@ -40,9 +40,17 @@
             this.txtSaveLocation = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnEdit = new System.Windows.Forms.Button();
+            this.btnRestore = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnBackupLocation = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtBackupDirectory = new System.Windows.Forms.TextBox();
+            this.chkTrayMinimize = new System.Windows.Forms.CheckBox();
+            this.chkHideRestoreWarning = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnAutoBackupLocation = new System.Windows.Forms.Button();
@@ -56,11 +64,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BackupTimer = new System.Windows.Forms.Timer(this.components);
-            this.btnRestore = new System.Windows.Forms.Button();
-            this.chkHideRestoreWarning = new System.Windows.Forms.CheckBox();
-            this.chkTrayMinimize = new System.Windows.Forms.CheckBox();
             this.TrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.btnEdit = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -91,6 +95,7 @@
             this.colSource});
             this.lvBackups.FullRowSelect = true;
             this.lvBackups.Location = new System.Drawing.Point(3, 3);
+            this.lvBackups.MultiSelect = false;
             this.lvBackups.Name = "lvBackups";
             this.lvBackups.Size = new System.Drawing.Size(676, 239);
             this.lvBackups.TabIndex = 1;
@@ -158,6 +163,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnDelete);
             this.tabPage1.Controls.Add(this.btnEdit);
             this.tabPage1.Controls.Add(this.lvBackups);
             this.tabPage1.Controls.Add(this.btnRestore);
@@ -170,13 +176,48 @@
             this.tabPage1.Text = "Backups";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // btnDelete
+            // 
+            this.btnDelete.Enabled = false;
+            this.btnDelete.Location = new System.Drawing.Point(520, 284);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.TabIndex = 10;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnEdit.Enabled = false;
+            this.btnEdit.Location = new System.Drawing.Point(601, 284);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(75, 23);
+            this.btnEdit.TabIndex = 9;
+            this.btnEdit.Text = "Edit";
+            this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnRestore
+            // 
+            this.btnRestore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRestore.Enabled = false;
+            this.btnRestore.Location = new System.Drawing.Point(87, 284);
+            this.btnRestore.Name = "btnRestore";
+            this.btnRestore.Size = new System.Drawing.Size(75, 23);
+            this.btnRestore.TabIndex = 8;
+            this.btnRestore.Text = "Restore...";
+            this.btnRestore.UseVisualStyleBackColor = true;
+            this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.txtLog);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(682, 284);
+            this.tabPage2.Size = new System.Drawing.Size(682, 313);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Logs";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -188,11 +229,14 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(676, 278);
+            this.txtLog.Size = new System.Drawing.Size(676, 307);
             this.txtLog.TabIndex = 6;
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.btnBackupLocation);
+            this.tabPage3.Controls.Add(this.label4);
+            this.tabPage3.Controls.Add(this.txtBackupDirectory);
             this.tabPage3.Controls.Add(this.chkTrayMinimize);
             this.tabPage3.Controls.Add(this.chkHideRestoreWarning);
             this.tabPage3.Controls.Add(this.groupBox1);
@@ -202,10 +246,59 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(682, 284);
+            this.tabPage3.Size = new System.Drawing.Size(682, 313);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Options";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnBackupLocation
+            // 
+            this.btnBackupLocation.Location = new System.Drawing.Point(498, 134);
+            this.btnBackupLocation.Name = "btnBackupLocation";
+            this.btnBackupLocation.Size = new System.Drawing.Size(75, 23);
+            this.btnBackupLocation.TabIndex = 13;
+            this.btnBackupLocation.Text = "Browse...";
+            this.btnBackupLocation.UseVisualStyleBackColor = true;
+            this.btnBackupLocation.Click += new System.EventHandler(this.btnBackupLocation_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 115);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(120, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Backup Save Directory:";
+            // 
+            // txtBackupDirectory
+            // 
+            this.txtBackupDirectory.BackColor = System.Drawing.SystemColors.Control;
+            this.txtBackupDirectory.Location = new System.Drawing.Point(6, 134);
+            this.txtBackupDirectory.Name = "txtBackupDirectory";
+            this.txtBackupDirectory.ReadOnly = true;
+            this.txtBackupDirectory.Size = new System.Drawing.Size(483, 20);
+            this.txtBackupDirectory.TabIndex = 11;
+            // 
+            // chkTrayMinimize
+            // 
+            this.chkTrayMinimize.AutoSize = true;
+            this.chkTrayMinimize.Location = new System.Drawing.Point(9, 89);
+            this.chkTrayMinimize.Name = "chkTrayMinimize";
+            this.chkTrayMinimize.Size = new System.Drawing.Size(133, 17);
+            this.chkTrayMinimize.TabIndex = 10;
+            this.chkTrayMinimize.Text = "Minimize to system tray";
+            this.chkTrayMinimize.UseVisualStyleBackColor = true;
+            // 
+            // chkHideRestoreWarning
+            // 
+            this.chkHideRestoreWarning.AutoSize = true;
+            this.chkHideRestoreWarning.Location = new System.Drawing.Point(9, 66);
+            this.chkHideRestoreWarning.Name = "chkHideRestoreWarning";
+            this.chkHideRestoreWarning.Size = new System.Drawing.Size(204, 17);
+            this.chkHideRestoreWarning.TabIndex = 9;
+            this.chkHideRestoreWarning.Text = "Hide warning when restoring backups";
+            this.chkHideRestoreWarning.UseVisualStyleBackColor = true;
+            this.chkHideRestoreWarning.CheckedChanged += new System.EventHandler(this.chkHideRestoreWarning_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -215,9 +308,9 @@
             this.groupBox1.Controls.Add(this.txtAutoBackupLocation);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.chkAutoBackup);
-            this.groupBox1.Location = new System.Drawing.Point(9, 122);
+            this.groupBox1.Location = new System.Drawing.Point(9, 160);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(647, 156);
+            this.groupBox1.Size = new System.Drawing.Size(647, 135);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Incremental Backup";
@@ -233,7 +326,7 @@
             // 
             // btnAutoBackupLocation
             // 
-            this.btnAutoBackupLocation.Location = new System.Drawing.Point(495, 99);
+            this.btnAutoBackupLocation.Location = new System.Drawing.Point(489, 99);
             this.btnAutoBackupLocation.Name = "btnAutoBackupLocation";
             this.btnAutoBackupLocation.Size = new System.Drawing.Size(75, 23);
             this.btnAutoBackupLocation.TabIndex = 7;
@@ -269,7 +362,7 @@
             this.txtAutoBackupLocation.Location = new System.Drawing.Point(6, 102);
             this.txtAutoBackupLocation.Name = "txtAutoBackupLocation";
             this.txtAutoBackupLocation.ReadOnly = true;
-            this.txtAutoBackupLocation.Size = new System.Drawing.Size(483, 20);
+            this.txtAutoBackupLocation.Size = new System.Drawing.Size(474, 20);
             this.txtAutoBackupLocation.TabIndex = 8;
             // 
             // label3
@@ -338,55 +431,10 @@
             this.BackupTimer.Interval = 600000;
             this.BackupTimer.Tick += new System.EventHandler(this.BackupTimer_Tick);
             // 
-            // btnRestore
-            // 
-            this.btnRestore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRestore.Enabled = false;
-            this.btnRestore.Location = new System.Drawing.Point(87, 284);
-            this.btnRestore.Name = "btnRestore";
-            this.btnRestore.Size = new System.Drawing.Size(75, 23);
-            this.btnRestore.TabIndex = 8;
-            this.btnRestore.Text = "Restore...";
-            this.btnRestore.UseVisualStyleBackColor = true;
-            this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
-            // 
-            // chkHideRestoreWarning
-            // 
-            this.chkHideRestoreWarning.AutoSize = true;
-            this.chkHideRestoreWarning.Location = new System.Drawing.Point(9, 66);
-            this.chkHideRestoreWarning.Name = "chkHideRestoreWarning";
-            this.chkHideRestoreWarning.Size = new System.Drawing.Size(204, 17);
-            this.chkHideRestoreWarning.TabIndex = 9;
-            this.chkHideRestoreWarning.Text = "Hide warning when restoring backups";
-            this.chkHideRestoreWarning.UseVisualStyleBackColor = true;
-            this.chkHideRestoreWarning.CheckedChanged += new System.EventHandler(this.chkHideRestoreWarning_CheckedChanged);
-            // 
-            // chkTrayMinimize
-            // 
-            this.chkTrayMinimize.AutoSize = true;
-            this.chkTrayMinimize.Location = new System.Drawing.Point(9, 89);
-            this.chkTrayMinimize.Name = "chkTrayMinimize";
-            this.chkTrayMinimize.Size = new System.Drawing.Size(133, 17);
-            this.chkTrayMinimize.TabIndex = 10;
-            this.chkTrayMinimize.Text = "Minimize to system tray";
-            this.chkTrayMinimize.UseVisualStyleBackColor = true;
-            // 
             // TrayIcon
             // 
             this.TrayIcon.Text = "Sekiro Save Manager";
             this.TrayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
-            // 
-            // btnEdit
-            // 
-            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEdit.Enabled = false;
-            this.btnEdit.Location = new System.Drawing.Point(601, 284);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(75, 23);
-            this.btnEdit.TabIndex = 9;
-            this.btnEdit.Text = "Edit";
-            this.btnEdit.UseVisualStyleBackColor = true;
-            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // MainForm
             // 
@@ -452,6 +500,10 @@
         private System.Windows.Forms.CheckBox chkTrayMinimize;
         private System.Windows.Forms.NotifyIcon TrayIcon;
         private System.Windows.Forms.Button btnEdit;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnBackupLocation;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtBackupDirectory;
     }
 }
 
