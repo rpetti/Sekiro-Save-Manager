@@ -52,6 +52,7 @@ namespace Sekiro_Save_Manager.Forms
             {
                 DisplayBackup(backup);
             }
+            UpdateButtonStatus();
         }
 
         private void DisplayBackup(SaveBackup backup)
@@ -203,6 +204,11 @@ namespace Sekiro_Save_Manager.Forms
         }
 
         private void lvBackups_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateButtonStatus();
+        }
+
+        private void UpdateButtonStatus()
         {
             btnRestore.Enabled = lvBackups.SelectedItems.Count > 0;
             btnEdit.Enabled = lvBackups.SelectedItems.Count > 0;
